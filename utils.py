@@ -35,13 +35,14 @@ def get_model_depths(wavelength, rprs, Tstar, Tplanet):
     """
     
     # Get blackbody functions for each component
-    bb_star = BlackBody(T_star * q.K)
-    bb_planet = BlackBody(T_planet * q.K) 
+    bb_star = BlackBody(Tstar * q.K)
+    bb_planet = BlackBody(Tplanet * q.K) 
     
     # Get area ratio:
     ApAs = (rprs)**2
 
     # Get flux ratio:
+    wavelength = wavelength * q.um
     FpFs = bb_planet(wavelength) / bb_star(wavelength) 
 
     if rprs >= 1.:
@@ -113,7 +114,7 @@ def get_sigma_phot(jmag = 13.):
 
         raise Exception('Only magnitudes 13, 14 and 15 are allowed.')
 
-    return (1. / sns) * 1e6, texp
+    return central_wavelengths, (1. / sns) * 1e6, texp
 
 def get_Nin(texp, a, Rp, Ms):
     """
@@ -129,8 +130,6 @@ def get_Nin(texp, a, Rp, Ms):
         Semi-major axis in AU.
     Rp : float
         Planetary radius in units of REarth
-    Mp : float
-        Planetary mass in units of MEarth
     Ms : flat
         Stellar mass in units of MSun
     """

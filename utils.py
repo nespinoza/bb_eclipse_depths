@@ -93,7 +93,7 @@ def get_sigma_phot(jmag = 13.):
                         126.85, 74.42, 26.72, 11.67, 
                         1.83])
 
-    else jmag == 14.:
+    elif jmag == 14.:
 
         # Define SNRs at these throughputs (obtained through the JWST ETC), 
         # i.e., https://jwst.etc.stsci.edu/
@@ -101,13 +101,17 @@ def get_sigma_phot(jmag = 13.):
                         60.39, 33.09, 11.44, 4.94, 
                         0.77])
 
-    else jmag == 15.:
+    elif jmag == 15.:
 
         # Define SNRs at these throughputs (obtained through the JWST ETC), 
         # i.e., https://jwst.etc.stsci.edu/
         sns = np.array([129.15, 116.30, 56.59, 21.65,
                         25.67, 13.52, 4.59, 1.97,  
                         0.31])
+
+    else:
+
+        raise Exception('Only magnitudes 13, 14 and 15 are allowed.')
 
     return (1. / sns) * 1e6, texp
 

@@ -146,3 +146,30 @@ def get_Nin(texp, a, Rp, Ms):
 
     # Return Nin:
     return ( P.to(q.s).value / np.pi ) * rpa / texp
+
+
+def sigma_depth(sigma_phot, n_in, n_eclipses):
+    """
+    Sigma-depth for the given photometric filters.
+
+    Input
+    -----
+
+    sigma_phot : array_like
+    The photometric error in parts-per-million.
+
+    n_in : int
+    The number of datapoints in eclipse. Usually estimated as
+    (transit time / integration time).
+
+    n_eclipses : int
+    The number of transits considered in the photometric analysis.
+
+    Returns
+    -------
+
+    out : ndarray
+    The sigma depth.
+
+    """
+    return sigma_phot / np.sqrt(n_in * n_eclipses)

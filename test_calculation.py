@@ -41,7 +41,7 @@ central_wavelengths, sigma_phot, texp = utils.get_sigma_phot(jmag = 13.)
 Nin = utils.get_Nin(texp, a.value, Rplanet.value, Mstar)
 
 # Calculate sigma-depth for all photometric filters:
-sigma_depth = ( sigma_phot / np.sqrt(Nin) ) / np.sqrt(Neclipses)
+sigma_depth = utils.sigma_depth(sigma_phot, Nin, Neclipses)
 
 # Plot 3-sigma values:
 plt.plot(central_wavelengths, 3. * sigma_depth, 'o', color = 'cornflowerblue')

@@ -24,7 +24,8 @@ max_w = 30.
 Rstar = Rstar * q.Rsun
 a = a * q.AU
 
-Teq = Tstar * np.sqrt( Rstar.to(q.AU).value / (2. * a.value) )
+Teq = utils.equilibrium_temperature(
+    {"Radius" : Rstar.value, "Temperature" : Tstar}, a.value)
 # Now, calculate model transit depths. To this end, first get Rp/Rs:
 Rplanet = Rplanet * q.Rearth
 rprs = Rplanet.to(q.Rsun) / Rstar

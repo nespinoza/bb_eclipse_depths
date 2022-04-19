@@ -173,3 +173,33 @@ def sigma_depth(sigma_phot, n_in, n_eclipses):
 
     """
     return sigma_phot / np.sqrt(n_in * n_eclipses)
+
+
+def equilibrium_temperature(star, distance, albedo=0.):
+    """
+    Equilibrium temperature for an object orbiting the given star at the given
+    distance.
+
+    Input
+    -----
+
+    star : dict
+    Dictionary containing at least "Temperature" (in Kelvin) and "Radius"
+    (in solar masses) keys.
+
+    distance : array_like
+    The orbital distance.
+
+    albedo : float (optional, default: 0.)
+    The Bond albedo.
+
+    Returns
+    -------
+
+    out : ndarray
+    The equilibrium temperature in the same units as `star["Temperature"]`.
+
+    """
+    return star["Temperature"] * np.sqrt(
+        0.5 * (star["Radius"] * q.Rsun).to(q.AU) /
+        (distance * q.AU)).value * np.power(1. - albedo, 0.25)

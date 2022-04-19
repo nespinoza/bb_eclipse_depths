@@ -45,15 +45,8 @@ def get_model_depths(wavelength, rprs, Tstar, Tplanet):
     wavelength = wavelength * q.um
     FpFs = bb_planet(wavelength) / bb_star(wavelength) 
 
-    if rprs >= 1.:
-
-        FinFout = (1. + (FpFs) * (ApAs - 1.)) / (1. + FpFs * ApAs)
-
-    else:
-
-        FinFout = 1. / (1. + (FpFs * ApAs))
-
-    return ( 1. - FinFout ) * 1e6
+    return 1.e6 * (1. - (1. + (FpFs) * (ApAs - 1.) *
+                         np.heaviside(rprs - 1., 0.)) / (1. + FpFs * ApAs))
 
 def get_sigma_phot(jmag = 13.):
     """

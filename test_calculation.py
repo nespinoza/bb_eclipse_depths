@@ -24,7 +24,8 @@ max_w = 30.
 Rstar = Rstar * q.Rsun
 a = a * q.AU
 
-Teq = Tstar * np.sqrt( Rstar.to(q.AU).value / (2. * a.value) )
+Teq = utils.equilibrium_temperature(
+    {"Radius" : Rstar.value, "Temperature" : Tstar}, a.value)
 # Now, calculate model transit depths. To this end, first get Rp/Rs:
 Rplanet = Rplanet * q.Rearth
 rprs = Rplanet.to(q.Rsun) / Rstar
@@ -41,7 +42,7 @@ central_wavelengths, sigma_phot, texp = utils.get_sigma_phot(jmag = 13.)
 Nin = utils.get_Nin(texp, a.value, Rplanet.value, Mstar)
 
 # Calculate sigma-depth for all photometric filters:
-sigma_depth = ( sigma_phot / np.sqrt(Nin) ) / np.sqrt(Neclipses)
+sigma_depth = utils.sigma_depth(sigma_phot, Nin, Neclipses)
 
 # Plot 3-sigma values:
 plt.plot(central_wavelengths, 3. * sigma_depth, 'o', color = 'cornflowerblue')

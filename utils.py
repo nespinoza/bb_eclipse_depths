@@ -45,15 +45,8 @@ def get_model_depths(wavelength, rprs, Tstar, Tplanet):
     wavelength = wavelength * q.um
     FpFs = bb_planet(wavelength) / bb_star(wavelength) 
 
-    if rprs >= 1.:
-
-        FinFout = (1. + (FpFs) * (ApAs - 1.)) / (1. + FpFs * ApAs)
-
-    else:
-
-        FinFout = 1. / (1. + (FpFs * ApAs))
-
-    return ( 1. - FinFout ) * 1e6
+    return 1.e6 * (1. - (1. + (FpFs) * (ApAs - 1.) *
+                         np.heaviside(rprs - 1., 0.)) / (1. + FpFs * ApAs))
 
 def get_sigma_phot(jmag = 13.):
     """
@@ -146,3 +139,60 @@ def get_Nin(texp, a, Rp, Ms):
 
     # Return Nin:
     return ( P.to(q.s).value / np.pi ) * rpa / texp
+
+
+def sigma_depth(sigma_phot, n_in, n_eclipses):
+    """
+    Sigma-depth for the given photometric filters.
+
+    Input
+    -----
+
+    sigma_phot : array_like
+    The photometric error in parts-per-million.
+
+    n_in : int
+    The number of datapoints in eclipse. Usually estimated as
+    (transit time / integration time).
+
+    n_eclipses : int
+    The number of transits considered in the photometric analysis.
+
+    Returns
+    -------
+
+    out : ndarray
+    The sigma depth.
+
+    """
+    return sigma_phot / np.sqrt(n_in * n_eclipses)
+
+
+def equilibrium_temperature(star, distance, albedo=0.):
+    """
+    Equilibrium temperature for an object orbiting the given star at the given
+    distance.
+
+    Input
+    -----
+
+    star : dict
+    Dictionary containing at least "Temperature" (in Kelvin) and "Radius"
+    (in solar masses) keys.
+
+    distance : array_like
+    The orbital distance.
+
+    albedo : float (optional, default: 0.)
+    The Bond albedo.
+
+    Returns
+    -------
+
+    out : ndarray
+    The equilibrium temperature in the same units as `star["Temperature"]`.
+
+    """
+    return star["Temperature"] * np.sqrt(
+        0.5 * (star["Radius"] * q.Rsun).to(q.AU) /
+        (distance * q.AU)).value * np.power(1. - albedo, 0.25)

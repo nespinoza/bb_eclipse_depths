@@ -78,12 +78,12 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                     #ax.clabel(l, fmt="%1.0f", fontsize=14)
 
                 if k == 0:
-                    ax.set_ylabel(r"$R_\mathrm{p}\,[R_\oplus]$", fontsize=20)
+                    ax.set_ylabel(r"$R_\mathrm{p}\,[R_\oplus]$", fontsize=18)
 
                 ax.set_xscale('log')
                 ax.set_yscale('log')
-                plt.setp(ax.get_xticklabels(), fontsize=18)
-                plt.setp(ax.get_yticklabels(), fontsize=18)
+                plt.setp(ax.get_xticklabels(), fontsize=14)
+                plt.setp(ax.get_yticklabels(), fontsize=14)
 
                 if (index < 8):
                     ax.text(3. * a_in_au.min(),
@@ -104,13 +104,13 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
 
                 if not global_colorbar:
                     cbar = fig.colorbar(cs, ax=ax)
-                    cbar.ax.tick_params(labelsize=14)
+                    cbar.ax.tick_params(labelsize=12)
 
             else:
                 ax.axis('off')
 
     for j in range(ncols):
-        axs[nrows - 1][j].set_xlabel(r"$a$ [AU]", fontsize=20)
+        axs[nrows - 1][j].set_xlabel(r"$a$ [AU]", fontsize=16)
 
     if global_colorbar:
         # To-do: `cs` is the last contourf plotted. We want a global range!

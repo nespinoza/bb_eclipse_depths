@@ -59,20 +59,23 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                 # 3-sigma percentage of detectability.
                 detectability = (model_depth / (sigma_depth)).value
 
-                if np.any(detectability > 3.):
-                    l = ax.contour(a,
-                                   r_p,
-                                   detectability,
-                                   colors='white',
-                                   levels=[3.])
-                    ax.clabel(l, fmt="%1.0f", fontsize=14)
-
                 cs = ax.contourf(a,
                                  r_p,
                                  detectability,
                                  cmap='hot',
                                  norm=normalizer,
                                  levels=25)
+
+                ax.axvspan(0.006, 0.02, alpha=0.2, color='orange')
+                ax.text(0.012, 16, "HZ", fontsize=12, color='peru', zorder=1)
+
+                if np.any(detectability > 3.):
+                    l = ax.contour(a,
+                                   r_p,
+                                   detectability,
+                                   colors='white',
+                                   levels=[3.])
+                    #ax.clabel(l, fmt="%1.0f", fontsize=14)
 
                 if k == 0:
                     ax.set_ylabel(r"$R_\mathrm{p}\,[R_\oplus]$", fontsize=20)

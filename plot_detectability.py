@@ -13,7 +13,7 @@ plt.rcParams["mathtext.fontset"] = "cm"
 def plot_contours(star, n_eclipses, global_colorbar=False):
 
     # Independent variables in colormaps.
-    a_in_au = np.geomspace(0.001, 10., 500)
+    a_in_au = np.geomspace(0.001, 0.1, 500)
     r_p_in_rearth = np.linspace(1., 20., 500)
     a, r_p = np.meshgrid(a_in_au, r_p_in_rearth)
 
@@ -29,7 +29,7 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                             ncols=ncols,
                             sharex=True,
                             sharey=True,
-                            figsize=(10, 12))
+                            figsize=(13, 10))
     fig.subplots_adjust(hspace=0.1)
 
     # Manually scale all plots to given range.
@@ -65,7 +65,7 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                                    detectability,
                                    colors='white',
                                    levels=[3.])
-                    ax.clabel(l, fmt="%1.1f")
+                    ax.clabel(l, fmt="%1.0f", fontsize=14)
 
                 cs = ax.contourf(a,
                                  r_p,
@@ -83,8 +83,8 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                 plt.setp(ax.get_yticklabels(), fontsize=18)
 
                 ax.text(
-                    0.006 * a_in_au.max(),
-                    0.8 * r_p_in_rearth.max(),
+                    0.13 * a_in_au.max(),
+                    1.2 * r_p_in_rearth.min(),
                     r"$\lambda = {:1.2f}\,\mu\mathrm{{m}}$".format(wavelength),
                     fontsize=12,
                     bbox=dict(edgecolor='black',

@@ -82,6 +82,14 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                 plt.setp(ax.get_xticklabels(), fontsize=18)
                 plt.setp(ax.get_yticklabels(), fontsize=18)
 
+                if (index < 8):
+                    ax.text(3. * a_in_au.min(),
+                            2.8 * r_p_in_rearth.min(),
+                            "detectable",
+                            fontsize=12,
+                            rotation=83.5,
+                            color='white')
+
                 ax.text(
                     0.13 * a_in_au.max(),
                     1.2 * r_p_in_rearth.min(),

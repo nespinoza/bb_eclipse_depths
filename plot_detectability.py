@@ -10,7 +10,7 @@ plt.rcParams["font.family"] = "Latin Modern Roman"
 plt.rcParams["mathtext.fontset"] = "cm"
 
 
-def plot_contours(star, n_eclipses, global_colorbar=False):
+def plot_contours(star, n_eclipses, global_colorbar=False, rasterized=True):
 
     # Independent variables in colormaps.
     a_in_au = np.geomspace(0.001, 0.1, 500)
@@ -64,7 +64,11 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                                  detectability,
                                  cmap='hot',
                                  norm=normalizer,
-                                 levels=25)
+                                 levels=100)
+
+                if rasterized:
+                    for c in cs.collections:
+                        c.set_rasterized(True)
 
                 ax.axvspan(0.006, 0.02, alpha=0.2, color='orange')
                 ax.text(0.012, 16, "HZ", fontsize=12, color='peru', zorder=1)
@@ -118,7 +122,8 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
         fig.colorbar(cs, ax=axs.ravel().tolist(), cmap='hot')
 
     plt.savefig("DetectabilityAtJmag{:1.0f}.pdf".format(star["Jmag"]),
-                bbox_inches="tight")
+                bbox_inches="tight",
+                dpi=300)
 
 
 if __name__ == "__main__":

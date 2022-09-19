@@ -10,10 +10,10 @@ plt.rcParams["font.family"] = "Latin Modern Roman"
 plt.rcParams["mathtext.fontset"] = "cm"
 
 
-def plot_contours(star, n_eclipses, global_colorbar=False):
+def plot_contours(star, n_eclipses, global_colorbar=False, rasterized=True):
 
     # Independent variables in colormaps.
-    a_in_au = np.geomspace(0.001, 10., 500)
+    a_in_au = np.geomspace(0.001, 0.1, 500)
     r_p_in_rearth = np.linspace(1., 20., 500)
     a, r_p = np.meshgrid(a_in_au, r_p_in_rearth)
 
@@ -29,7 +29,7 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                             ncols=ncols,
                             sharex=True,
                             sharey=True,
-                            figsize=(10, 12))
+                            figsize=(13, 10))
     fig.subplots_adjust(hspace=0.1)
 
     # Manually scale all plots to given range.
@@ -59,32 +59,47 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
                 # 3-sigma percentage of detectability.
                 detectability = (model_depth / (sigma_depth)).value
 
+                cs = ax.contourf(a,
+                                 r_p,
+                                 detectability,
+                                 cmap='hot',
+                                 norm=normalizer,
+                                 levels=100)
+
+                if rasterized:
+                    for c in cs.collections:
+                        c.set_rasterized(True)
+
+                ax.axvspan(0.006, 0.02, alpha=0.2, color='orange')
+                ax.text(0.012, 16, "HZ", fontsize=12, color='peru', zorder=1)
+
                 if np.any(detectability > 3.):
                     l = ax.contour(a,
                                    r_p,
                                    detectability,
                                    colors='white',
                                    levels=[3.])
-                    ax.clabel(l, fmt="%1.1f")
-
-                cs = ax.contourf(a,
-                                 r_p,
-                                 detectability,
-                                 cmap='hot',
-                                 norm=normalizer,
-                                 levels=25)
+                    #ax.clabel(l, fmt="%1.0f", fontsize=14)
 
                 if k == 0:
-                    ax.set_ylabel(r"$R_\mathrm{p}\,[R_\oplus]$", fontsize=20)
+                    ax.set_ylabel(r"$R_\mathrm{p}\,[R_\oplus]$", fontsize=18)
 
                 ax.set_xscale('log')
                 ax.set_yscale('log')
-                plt.setp(ax.get_xticklabels(), fontsize=18)
-                plt.setp(ax.get_yticklabels(), fontsize=18)
+                plt.setp(ax.get_xticklabels(), fontsize=14)
+                plt.setp(ax.get_yticklabels(), fontsize=14)
+
+                if (index < 8):
+                    ax.text(3. * a_in_au.min(),
+                            2.8 * r_p_in_rearth.min(),
+                            "detectable",
+                            fontsize=12,
+                            rotation=83.5,
+                            color='white')
 
                 ax.text(
-                    0.006 * a_in_au.max(),
-                    0.8 * r_p_in_rearth.max(),
+                    0.13 * a_in_au.max(),
+                    1.2 * r_p_in_rearth.min(),
                     r"$\lambda = {:1.2f}\,\mu\mathrm{{m}}$".format(wavelength),
                     fontsize=12,
                     bbox=dict(edgecolor='black',
@@ -93,13 +108,13 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
 
                 if not global_colorbar:
                     cbar = fig.colorbar(cs, ax=ax)
-                    cbar.ax.tick_params(labelsize=14)
+                    cbar.ax.tick_params(labelsize=12)
 
             else:
                 ax.axis('off')
 
     for j in range(ncols):
-        axs[nrows - 1][j].set_xlabel(r"$a$ [AU]", fontsize=20)
+        axs[nrows - 1][j].set_xlabel(r"$a$ [AU]", fontsize=16)
 
     if global_colorbar:
         # To-do: `cs` is the last contourf plotted. We want a global range!
@@ -107,7 +122,8 @@ def plot_contours(star, n_eclipses, global_colorbar=False):
         fig.colorbar(cs, ax=axs.ravel().tolist(), cmap='hot')
 
     plt.savefig("DetectabilityAtJmag{:1.0f}.pdf".format(star["Jmag"]),
-                bbox_inches="tight")
+                bbox_inches="tight",
+                dpi=300)
 
 
 if __name__ == "__main__":
